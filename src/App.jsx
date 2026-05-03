@@ -98,6 +98,18 @@ const App = () => {
         const actionsBar = document.querySelector(".actions-bar");
         const deleteButtons = document.querySelectorAll(".delete-btn");
 
+        // Find rows with empty tasks to hide them
+        const tableRows = element.querySelectorAll(".table-row");
+        const hiddenRows = [];
+
+        tableRows.forEach((row) => {
+            const textarea = row.querySelector(".editable-textarea");
+            if (textarea && textarea.value.trim() === "") {
+                hiddenRows.push(row);
+                row.style.display = "none"; // Temporarily hide empty rows
+            }
+        });
+
         // Save original styles
         const originalWidth = element.style.width;
         const originalMaxWidth = element.style.maxWidth;
@@ -127,6 +139,13 @@ const App = () => {
                         clonedElement.style.width = "800px";
                         clonedElement.style.padding = "64px";
                     }
+                    // Double check in clone that empty rows are gone
+                    clonedDoc.querySelectorAll(".table-row").forEach((row) => {
+                        const txt = row.querySelector(".editable-textarea");
+                        if (txt && txt.value.trim() === "") {
+                            row.style.display = "none";
+                        }
+                    });
                 }
             });
 
@@ -143,10 +162,11 @@ const App = () => {
         } catch (err) {
             console.error("Failed to download image", err);
         } finally {
-            // Restore styles
+            // Restore styles and show hidden rows
             element.style.width = originalWidth;
             element.style.maxWidth = originalMaxWidth;
             element.style.position = originalPosition;
+            hiddenRows.forEach((row) => (row.style.display = "flex"));
             if (actionsBar) actionsBar.style.display = "flex";
             deleteButtons.forEach((btn) => (btn.style.visibility = "visible"));
         }
