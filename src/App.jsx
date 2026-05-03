@@ -495,7 +495,7 @@ const App = () => {
         .payment-box { background-color: #fdf2f8; padding: 24px; border-radius: 4px; }
         .payment-label { margin-bottom: 12px; }
         .payment-details { display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 500; }
-        .payment-row { display: flex; gap: 8px; }
+        .payment-row { display: flex; gap: 8px; justify-items: center; align-items: center }
         .payment-key { flex-shrink: 0; }
         .payment-value { font-weight: 600; }
 
