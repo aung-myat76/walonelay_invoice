@@ -114,13 +114,12 @@ const App = () => {
             await new Promise((resolve) => setTimeout(resolve, 150));
 
             const canvas = await window.html2canvas(element, {
-                scale: 3, // Higher scale for better text rendering
+                scale: 3,
                 useCORS: true,
                 backgroundColor: "#ffffff",
                 logging: false,
                 width: 800,
                 windowWidth: 800,
-                // This helps with text positioning issues in some browsers
                 onclone: (clonedDoc) => {
                     const clonedElement =
                         clonedDoc.querySelector(".invoice-paper");
@@ -134,7 +133,12 @@ const App = () => {
             const image = canvas.toDataURL("image/png");
             const link = document.createElement("a");
             link.href = image;
-            link.download = `Invoice_${invoiceNumber}.png`;
+
+            // Filename as Date and ID combination
+            const cleanId = invoiceNumber.replace(/[^a-z0-9]/gi, "_");
+            const cleanDate = invoiceDate.replace(/ /g, "_");
+            link.download = `${cleanId}_${cleanDate}.png`;
+
             link.click();
         } catch (err) {
             console.error("Failed to download image", err);
@@ -172,7 +176,7 @@ const App = () => {
                     <div className="info-block">
                         <label className="label-text">INVOICE TO:</label>
                         <input
-                            className="editable-input client-name"
+                            className="editable-input client-name myanmar-text"
                             value={invoiceTo}
                             onChange={(e) => setInvoiceTo(e.target.value)}
                         />
@@ -183,7 +187,7 @@ const App = () => {
                                 INVOICE NUMBER:
                             </span>
                             <input
-                                className="editable-input meta-value text-right"
+                                className="editable-input meta-value text-right myanmar-text"
                                 value={invoiceNumber}
                                 onChange={(e) =>
                                     setInvoiceNumber(e.target.value)
@@ -195,7 +199,7 @@ const App = () => {
                                 INVOICE DATE:
                             </span>
                             <input
-                                className="editable-input meta-value text-right uppercase"
+                                className="editable-input meta-value text-right uppercase myanmar-text"
                                 value={invoiceDate}
                                 onChange={(e) => setInvoiceDate(e.target.value)}
                             />
@@ -205,7 +209,7 @@ const App = () => {
                                 DUE DATE:
                             </span>
                             <input
-                                className="editable-input meta-value text-right uppercase"
+                                className="editable-input meta-value text-right uppercase myanmar-text"
                                 value={dueDate}
                                 onChange={(e) => setDueDate(e.target.value)}
                             />
@@ -313,7 +317,7 @@ const App = () => {
                                     Account Name :
                                 </span>
                                 <input
-                                    className="editable-input payment-value"
+                                    className="editable-input payment-value myanmar-text"
                                     value={paymentInfo.accountName}
                                     onChange={(e) =>
                                         setPaymentInfo({
@@ -362,18 +366,16 @@ const App = () => {
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        /* Loading a standard font that supports Myanmar characters correctly without clipping */
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&display=swap');
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; color: #374151; }
 
-        /* Specific fix for Myanmar characters clipping */
         .myanmar-text {
           font-family: 'Noto Sans Myanmar', 'Inter', sans-serif;
-          line-height: 1.8 !important; /* Increased line height to prevent clipping of top/bottom marks */
-          padding-top: 4px !important;
-          padding-bottom: 4px !important;
+          line-height: 2 !important; 
+          padding-top: 6px !important;
+          padding-bottom: 6px !important;
         }
 
         .app-container {
@@ -442,7 +444,7 @@ const App = () => {
         .editable-input, .editable-textarea { border: none; background: transparent; outline: none; font-family: inherit; color: inherit; width: 100%; padding: 0; }
         .editable-input:focus, .editable-textarea:focus { background-color: #fff1f2; }
         .client-name { font-size: 18px; font-weight: 500; margin-top: 8px; }
-        .meta-value { font-weight: 500; width: 130px; }
+        .meta-value { font-weight: 500; width: 180px; }
         .text-right { text-align: right; }
         .uppercase { text-transform: uppercase; }
 
